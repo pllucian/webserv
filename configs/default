@@ -1,0 +1,106 @@
+server {
+	listen localhost:8080;
+	server_name website0 www.website0;
+
+	error_page 404 www/website0/error_pages/404.html;
+
+	client_max_body_size 512;
+
+	location /error {
+		return 404;
+	}
+
+	location /go {
+		return 301 http://www.google.com;
+	}
+
+	location / {
+		methods GET POST DELETE;
+		root www/website0;
+		autoindex on;
+		index index.htm index.html index.php;
+		upload_pass upload;
+	}
+
+	location .php {
+		cgi_pass /usr/bin/php;
+	}
+
+	location .py {
+		cgi_pass /usr/bin/python3;
+	}
+}
+
+server {
+	listen localhost:8080;
+	server_name othersite www.othersite;
+}
+
+server {
+	listen localhost:8081;
+	server_name website1 www.website1;
+
+	error_page 404 www/website1/error_pages/404.html;
+
+	client_max_body_size 512;
+
+	location /error {
+		return 404;
+	}
+
+	location /go {
+		return 301 http://www.google.com;
+	}
+
+	location / {
+		methods GET POST DELETE PUT;
+		root www/website1;
+		autoindex on;
+		upload_pass upload;
+	}
+
+	location .php {
+		cgi_pass /usr/bin/php;
+	}
+
+	location .py {
+		cgi_pass /usr/bin/python3;
+	}
+}
+
+server {
+	listen localhost:8021;
+	server_name testsite www.testsite;
+
+	error_page 404 www/testsite/error_pages/404.html;
+
+	client_max_body_size 100;
+
+	location / {
+		methods GET;
+		root www/testsite;
+		index index.html;
+	}
+
+	location /put_test {
+		methods PUT DELETE;
+		root www/testsite;
+		index index.html;
+		upload_pass upload;
+	}
+
+	location .bla {
+		cgi_pass /home/admin/21school/42cursus/webserv/tests/ubuntu_cgi_tester;
+	}
+
+	location /post_body {
+		methods POST;
+		root www/testsite;
+	}
+
+	location /directory {
+		methods GET POST;
+		root www/testsite/YoupiBanane;
+		index youpi.bad_extension;
+	}
+}
